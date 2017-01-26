@@ -28,7 +28,7 @@ public class MyResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<User> findAll() { 
+    public ArrayList<User> findAll() {
       return DaoUsers.findAll();
     }
 
@@ -37,7 +37,7 @@ public class MyResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("id") int id){
       try{
-         return Response.ok(DaoUsers.find(id)).build();
+         return Response.ok(DaoUsers.find(id-1)).build();
       }catch(IndexOutOfBoundsException iobe){
          return Response.status(Status.NOT_FOUND).build();
       }
