@@ -8,9 +8,15 @@ public class DaoUsers {
 
    private static ArrayList<User> db = new ArrayList<User>();
 
-   // public static User save(User user){
-   //    return user;
-   // }
+    private static int increment = 1;
+
+
+   public static User save(User user){
+      user.setId(increment++);
+      db.add(user);
+      return user;
+
+   }
 
    public static ArrayList<User> findAll(){
       return db;

@@ -28,7 +28,7 @@ public class MyResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<User> findAll() {
+    public ArrayList<User> findAll() { 
       return DaoUsers.findAll();
     }
 
@@ -47,12 +47,8 @@ public class MyResource {
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Response addUser(User user, @Context UriInfo uriInfo) {
-      User newUser = new User();
-      UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-		URI newUri = uriBuilder.path(String.valueOf(newUser.getId())).build();
-
-		return Response.created(newUri).entity(newUser).build();
+   public Response addUser(User user) {
+      return Response.ok(DaoUsers.save(user)).build();
 
    }
 
