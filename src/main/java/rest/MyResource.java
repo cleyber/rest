@@ -17,39 +17,74 @@ import javax.ws.rs.core.Response.Status;
 
 import rest.model.User;
 import rest.dao.DaoUsers;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 
-/**
- * Root resource (exposed at "myresource" path)
- */
 @Path("myresource")
 public class MyResource {
 
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response addUser(User user) {
+      return Response.status(Status.CREATED).entity(DaoUsers.save(user)).build();
+   }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<User> findAll() {
-      return DaoUsers.findAll();
-    }
+    public Response findAll() {
+      if(!DaoUsers.findAll().isEmpty()){
+         return Response.ok(DaoUsers.findAll().values()).build();
+      }else {
+         return Response.status(Status.NOT_FOUND).build();
+      }
+   }
 
     @Path("{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("id") int id){
       try{
-         return Response.ok(DaoUsers.find(id-1)).build();
-      }catch(IndexOutOfBoundsException iobe){
+         if(DaoUsers.find(id) != null){
+            return Response.ok(DaoUsers.find(id)).build();
+         }else{
+            return Response.status(Status.NOT_FOUND).build();
+         }
+      }catch(NullPointerException npe){
          return Response.status(Status.NOT_FOUND).build();
+      }catch(ClassCastException cce){
+         return Response.status(Status.INTERNAL_SERVER_ERROR).build();
       }
 
    }
 
-   @POST
+   @Path("{id}")
+   @DELETE
+   @Produces(MediaType.APPLICATION_JSON) // Lo puse por que no sabia que devolvia
+   public Response removeUser (@PathParam("id") int id){
+      try{
+         return Response.noContent().entity(DaoUsers.delete(id)).build();
+      }catch(Exception ex){
+         return Response.status(Status.NOT_FOUND).build();
+      }
+   }
+
+   @Path("{id}")
+   @PUT
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Response addUser(User user) {
-      return Response.ok(DaoUsers.save(user)).build();
-
+   public Response UpdateUser(@PathParam("id") int id, User user){
+      try{
+         if(DaoUsers.update(user, id) != null){
+            return Response.ok(DaoUsers.update(user, id)).build();
+         }else{
+            return Response.status(Status.BAD_REQUEST).build();
+         }
+      }catch(NullPointerException npe){
+         return Response.status(Status.NOT_FOUND).build();
+      }
    }
+
 
 }
