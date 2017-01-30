@@ -1,5 +1,5 @@
 package rest;
-import java.net.URI;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
@@ -9,10 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
 
 import rest.model.User;
@@ -22,6 +19,7 @@ import java.util.HashMap;
 
 
 @Path("myresource")
+//@Produces(MediaType.APPLICATION_JSON)
 public class MyResource {
 
    @POST
@@ -34,11 +32,7 @@ public class MyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
-      if(!DaoUsers.findAll().isEmpty()){
-         return Response.ok(DaoUsers.findAll().values()).build();
-      }else {
-         return Response.status(Status.NOT_FOUND).build();
-      }
+      return Response.ok(DaoUsers.findAll().values()).header("Access-Control-Allow-Origin", "*").build();      
    }
 
     @Path("{id}")
@@ -63,11 +57,10 @@ public class MyResource {
    @DELETE
    @Produces(MediaType.APPLICATION_JSON) // Lo puse por que no sabia que devolvia
    public Response removeUser (@PathParam("id") int id){
-      try{
-         return Response.noContent().entity(DaoUsers.delete(id)).build();
-      }catch(Exception ex){
+      if(DaoUsers.delete(id))
+         return Response.noContent().build();
+      else
          return Response.status(Status.NOT_FOUND).build();
-      }
    }
 
    @Path("{id}")
@@ -75,15 +68,10 @@ public class MyResource {
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public Response UpdateUser(@PathParam("id") int id, User user){
-      try{
-         if(DaoUsers.update(user, id) != null){
-            return Response.ok(DaoUsers.update(user, id)).build();
-         }else{
-            return Response.status(Status.BAD_REQUEST).build();
-         }
-      }catch(NullPointerException npe){
+      if(DaoUsers.update(user, id) != null)
+         return Response.ok(DaoUsers.update(user, id)).build();
+      else
          return Response.status(Status.NOT_FOUND).build();
-      }
    }
 
 

@@ -25,18 +25,21 @@ public class DaoUsers {
       return map.get(id);
    }
 
-   public static User update(User user, int id) throws NullPointerException{
+   public static User update(User user, int id){
       if(map.containsKey(id)){
          map.remove(id);
          user.setId(id);
          map.put(user.getId(), user);
+         return user;
+      }else {
+         return null;
       }
-      return user;
+
    }
 
    public static boolean delete(int id){
-      map.remove(id);
-      return true;
+      if( map.remove(id) != null) return true;
+      else return false;
    }
 
 

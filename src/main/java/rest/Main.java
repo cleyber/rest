@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.io.IOException;
 import java.net.URI;
 import rest.model.User;
+import rest.dao.DaoUsers;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://localhost:8080/api/v1/";
+    public static final String BASE_URI = "http://localhost:8081/api/v1/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -38,18 +39,15 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-      // User user = new User();
-      // List<User> addUser = new ArrayList<User>();
-      // addUser.add(user.setNombre("Cleyber"));
-      // addUser.add(user.setCorreo("cleyber65@gmail.com"));
-      // addUser.add(user.setId(1));
 
+      DaoUsers.save(new User(0, "name", "mail"));
+      DaoUsers.save(new User(0, "name2", "mail2"));
 
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey comenzó con WADL disponible en: "
                 + "%sapplication.wadl\nPara detener la ejecucion precione enter.", BASE_URI));
         System.in.read();
         server.stop();
-        
+
     }
 }
