@@ -32,7 +32,7 @@ public class MyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
-      return Response.ok(DaoUsers.findAll().values()).header("Access-Control-Allow-Origin", "*").build();      
+      return Response.ok(DaoUsers.findAll().values()).build();
    }
 
     @Path("{id}")

@@ -26,7 +26,7 @@ public class Main {
     public static HttpServer startServer() {
         // create a resource config that scans for JAX-RS resources and providers
         // in rest package
-        final ResourceConfig rc = new ResourceConfig().packages("rest");
+        final ResourceConfig rc = new ResourceConfig().packages("rest").register(rest.CORSResponseFilter.class);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -40,8 +40,8 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
 
-      DaoUsers.save(new User(0, "name", "mail"));
-      DaoUsers.save(new User(0, "name2", "mail2"));
+      DaoUsers.save(new User(0, "example", "example@gmail.com"));
+      DaoUsers.save(new User(0, "example2", "example2@gmail.com"));
 
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey comenzó con WADL disponible en: "
